@@ -3,6 +3,31 @@
 This document is a journal, it documents the thought process and certain decisions
 which are not in the code or notes. The most recent entry is on the top.
 
+# 26. September 2024
+
+The actual code which sets up the registers for the `mmap` syscall in the second
+example of the [blog article](https://blog.f0b.org/2022/05/process-injection-on-linux-injecting-into-processes/)
+is the following.
+
+```
+	regs2.rax = 9;		/* sys_mmap */
+	regs2.rdi = 0;
+	regs2.rsi = len;
+	regs2.rdx = 5;		/* PROT_READ | PROT_EXEC */
+	regs2.r10 = 0x22;	/* MAP_PRIVATE | MAP_ANONYMOUS */
+	regs2.r8 = -1;
+	regs2.r9 = 0;
+```
+
+The opcode for calling the `mmap` syscall is called `SYSCALL` and seems to be only
+part of the intel 64 opcodes, I wondered where it was in the opcode lists, as I
+was still familiar with the old calling style. Seems to be a "fast call" opcode,
+whatever that means.
+
+And regarding design, what do I want? A ruby interpreter inside a ruby interpreter
+or a payload which reads the ruby interpreters internals in a light-weight fashion?
+
+
 # 25. September 2024
 
 Came home after doodling on a sheet of paper of how this simple finger exercise 
